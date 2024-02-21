@@ -5,13 +5,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-@EqualsAndHashCode
+@Getter
+@EqualsAndHashCode(exclude = {"name"})
 @RequiredArgsConstructor
 public class Category {
-    @Getter
     private final int id;
-    @Getter
     @Setter
-    @EqualsAndHashCode.Exclude
     private String name;
 }
