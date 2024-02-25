@@ -5,7 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import ru.job4j.cars.model.User;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,20 +102,20 @@ public class UserRepository {
      */
     public Optional<User> findById(int userId) {
         Session session = sf.openSession();
-        User user = null;
+        Optional<User> user = Optional.empty();
         try {
             session.beginTransaction();
         Query<User> query = session.createQuery(
                 "from User where id = :fId", User.class)
                    .setParameter("fId", userId);
-        user = query.uniqueResult();
+        user = query.uniqueResultOptional();
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
-        return Optional.ofNullable(user);
+        return user;
     }
 
     /**
@@ -129,7 +129,7 @@ public class UserRepository {
         try {
             session.beginTransaction();
         resultList = session.createQuery(
-                        "from User where login = :fKey", User.class)
+                        "from User where login like :fKey", User.class)
                 .setParameter("fKey", "%" + key + "%")
                 .getResultList();
             session.getTransaction().commit();
@@ -148,19 +148,19 @@ public class UserRepository {
      */
     public Optional<User> findByLogin(String login) {
         Session session = sf.openSession();
-        User user = null;
+        Optional<User> user = Optional.empty();
         try {
             session.beginTransaction();
         Query<User> query = session.createQuery(
                 "from User where login = :fLogin", User.class);
         query.setParameter("fLogin", login);
-        user = query.uniqueResult();
+        user = query.uniqueResultOptional();
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
-        return Optional.ofNullable(user);
+        return user;
     }
 }
