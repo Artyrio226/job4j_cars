@@ -25,7 +25,7 @@ public class UserUsage {
                     .ifPresent(System.out::println);
             userRepository.findByLogin("admin")
                     .ifPresent(System.out::println);
-            user.setPassword("password");
+            user.setPassword("passwords");
             userRepository.update(user);
             userRepository.findById(user.getId())
                     .ifPresent(System.out::println);
