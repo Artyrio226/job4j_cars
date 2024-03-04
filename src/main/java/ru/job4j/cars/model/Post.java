@@ -20,14 +20,16 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Include
     private int id;
-
     private String description;
-
     private LocalDateTime created;
 
     @ManyToOne
     @JoinColumn(name = "auto_user_id")
     private User user;
+
+    @OneToOne
+    @JoinColumn(name = "car_id")
+    private Car car;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auto_post_id")

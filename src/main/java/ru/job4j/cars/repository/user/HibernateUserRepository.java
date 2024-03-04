@@ -1,17 +1,17 @@
-package ru.job4j.cars.repository;
+package ru.job4j.cars.repository.user;
 
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.job4j.cars.model.User;
+import ru.job4j.cars.repository.CrudRepository;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @AllArgsConstructor
-public class UserRepository {
-    private static final Logger LOG = LoggerFactory.getLogger(UserRepository.class.getName());
+public class HibernateUserRepository implements UserRepository {
     private final CrudRepository crudRepository;
 
     /**
@@ -20,29 +20,23 @@ public class UserRepository {
      * @return пользователь с id.
      */
     public Optional<User> create(User user) {
-        try {
-            crudRepository.run(session -> session.persist(user));
-            return Optional.of(user);
-        } catch (Exception e) {
-            LOG.error("Регистрация зарегистрированного пользователя, Exception in log example", e);
-        }
-        return Optional.empty();
+        return crudRepository.run(session -> session.persist(user)) ? Optional.of(user) : Optional.empty();
     }
 
     /**
      * Обновить в базе пользователя.
      * @param user пользователь.
      */
-    public void update(User user) {
-        crudRepository.run(session -> session.merge(user));
+    public boolean update(User user) {
+        return crudRepository.run(session -> session.merge(user));
     }
 
     /**
      * Удалить пользователя по id.
      * @param userId ID
      */
-    public void delete(int userId) {
-        crudRepository.run(
+    public boolean delete(int userId) {
+        return crudRepository.run(
                 "delete from User where id = :fId",
                 Map.of("fId", userId)
         );
