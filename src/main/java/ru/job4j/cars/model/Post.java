@@ -42,4 +42,8 @@ public class Post {
             inverseJoinColumns = { @JoinColumn(name = "user_id") }
     )
     private List<User> participates = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "auto_post_id")
+    private List<Photo> photos = new ArrayList<>();
 }

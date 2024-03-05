@@ -1,8 +1,7 @@
 package ru.job4j.cars.repository.user;
 
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.User;
 import ru.job4j.cars.repository.CrudRepository;
 
@@ -10,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Repository
 @AllArgsConstructor
 public class HibernateUserRepository implements UserRepository {
     private final CrudRepository crudRepository;
