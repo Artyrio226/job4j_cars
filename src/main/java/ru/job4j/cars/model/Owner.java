@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -23,4 +25,10 @@ public class Owner {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "history_owners",
+            joinColumns = {@JoinColumn(name = "owner_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "car_id", nullable = false, updatable = false)})
+    private Set<Car> owners = new HashSet<>();
 }
