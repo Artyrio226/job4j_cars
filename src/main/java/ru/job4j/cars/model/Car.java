@@ -22,17 +22,14 @@ public class Car {
     private int id;
     private String name;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "engine_id")
     private Engine engine;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_id")
     private Owner owner;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "history_owners",
-            joinColumns = {@JoinColumn(name = "car_id", nullable = false, updatable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "owner_id", nullable = false, updatable = false)})
-    private Set<Owner> owners = new HashSet<>();
+    @OneToMany(mappedBy = "car")
+    private Set<History> histories = new HashSet<>();
 }

@@ -22,13 +22,10 @@ public class Owner {
     private int id;
     private String name;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "history_owners",
-            joinColumns = {@JoinColumn(name = "owner_id", nullable = false, updatable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "car_id", nullable = false, updatable = false)})
-    private Set<Car> owners = new HashSet<>();
+    @OneToMany(mappedBy = "owner")
+    private Set<History> histories = new HashSet<>();
 }
