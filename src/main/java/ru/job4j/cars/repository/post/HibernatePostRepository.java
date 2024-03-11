@@ -24,13 +24,13 @@ public class HibernatePostRepository implements PostRepository {
 
     @Override
     public List<Post> findPostsWithPhoto() {
-        return crudRepository.query("FROM Post WHERE photos.size > 0", Post.class);
+        return crudRepository.query("FROM Post p join fetch p.photos WHERE p.photos is not empty", Post.class);
     }
 
     @Override
     public List<Post> findCarsByName(String name) {
         return crudRepository.query(
-                "from Post where name like :fName", Post.class,
+                "from Post p where p.car.name like :fName", Post.class,
                 Map.of("fName", "%" + name + "%")
         );
     }
