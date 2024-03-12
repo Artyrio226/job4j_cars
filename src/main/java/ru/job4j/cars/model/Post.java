@@ -21,13 +21,13 @@ public class Post {
     @Include
     private int id;
     private String description;
-    private LocalDateTime created;
+    private LocalDateTime created = LocalDateTime.now();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "auto_user_id")
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_id")
     private Car car;
 
@@ -35,7 +35,7 @@ public class Post {
     @JoinColumn(name = "auto_post_id")
     private List<PriceHistory> messengers = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "participates",
             joinColumns = { @JoinColumn(name = "post_id") },

@@ -2,7 +2,6 @@ package ru.job4j.cars.repository.owner;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
-import ru.job4j.cars.model.Car;
 import ru.job4j.cars.model.Owner;
 import ru.job4j.cars.repository.CrudRepository;
 

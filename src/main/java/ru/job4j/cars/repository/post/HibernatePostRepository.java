@@ -8,11 +8,51 @@ import ru.job4j.cars.repository.CrudRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
 public class HibernatePostRepository implements PostRepository {
     private final CrudRepository crudRepository;
+
+    @Override
+    public Optional<Post> create(Post post) {
+        return crudRepository.run(session -> session.persist(post)) ? Optional.of(post) : Optional.empty();
+    }
+
+    @Override
+    public boolean update(Post post) {
+        return crudRepository.run(session -> session.merge(post));
+    }
+
+    @Override
+    public boolean delete(int id) {
+        return crudRepository.run(
+                "delete from Post where id = :fId",
+                Map.of("fId", id)
+        );
+    }
+
+    @Override
+    public List<Post> findAllOrderById() {
+        return crudRepository.query("from Post order by id asc", Post.class);
+    }
+
+    @Override
+    public Optional<Post> findById(int id) {
+        return crudRepository.optional(
+                "from Post where id = :fId", Post.class,
+                Map.of("fId", id)
+        );
+    }
+
+    @Override
+    public List<Post> findByLikeDescription(String key) {
+        return crudRepository.query(
+                "from Post where description like :fKey", Post.class,
+                Map.of("fKey", "%" + key + "%")
+        );
+    }
 
     @Override
     public List<Post> findPostsForLastDays(int days) {
