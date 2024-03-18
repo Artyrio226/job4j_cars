@@ -1,4 +1,5 @@
-CREATE TABLE PRICE_HISTORY(
+CREATE TABLE PRICE_HISTORY
+(
    id SERIAL PRIMARY KEY,
    before BIGINT not null,
    after BIGINT not null,

@@ -20,7 +20,13 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private int id;
+    private int year;
+    private int mileage;
     private String name;
+    private String color;
+    private String body;
+    private String transmission;
+    private String drive;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "engine_id")

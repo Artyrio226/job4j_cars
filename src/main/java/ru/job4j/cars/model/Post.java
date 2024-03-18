@@ -32,8 +32,9 @@ public class Post {
     private Car car;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @OrderBy("id desc")
     @JoinColumn(name = "auto_post_id")
-    private List<PriceHistory> messengers = new ArrayList<>();
+    private List<PriceHistory> priceHistories = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
