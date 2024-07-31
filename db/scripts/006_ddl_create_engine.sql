@@ -1,4 +1,4 @@
-create table engine(
-    id serial primary key,
-    name  text  not null
+CREATE TABLE engine(
+    id BIGSERIAL PRIMARY KEY,
+    name  TEXT NOT NULL
 );

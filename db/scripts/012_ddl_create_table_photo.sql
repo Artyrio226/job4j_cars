@@ -1,6 +1,7 @@
-create table photo(
-    id serial primary key,
-    name varchar not null,
-    path varchar not null unique,
-    auto_post_id int references auto_post(id) on delete cascade
+CREATE TABLE photo
+(
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    path TEXT NOT NULL UNIQUE ,
+    auto_post_id BIGINT REFERENCES auto_post(id) ON DELETE CASCADE
 );

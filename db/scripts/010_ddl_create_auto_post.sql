@@ -1,8 +1,9 @@
-create table auto_post
+CREATE TABLE auto_post
 (
-    id            serial primary key,
-    description   text                           not null,
-    created       timestamp                      not null,
-    auto_user_id  int references auto_user (id)  not null,
-    car_id int not null references car(id)
+    id            BIGSERIAL PRIMARY KEY,
+    description   TEXT                           NOT NULL,
+    created       TIMESTAMP                      NOT NULL,
+    is_sold       BOOLEAN,
+    auto_user_id  BIGINT REFERENCES auto_user (id)  NOT NULL,
+    car_id        BIGINT REFERENCES car(id)         NOT NULL
 );

@@ -1,13 +1,12 @@
-create table car
+CREATE TABLE car
 (
-    id serial primary key,
-    year int not null,
-    mileage int not null,
-    name  text  not null,
-    color  text  not null,
-    body  text  not null,
-    transmission  text  not null,
-    drive  text  not null,
-    engine_id int not null unique references engine(id),
-    owner_id int not null unique references owner(id)
+    id BIGSERIAL PRIMARY KEY,
+    name  TEXT NOT NULL ,
+    year INT NOT NULL ,
+    mileage INT NOT NULL ,
+    color  TEXT NOT NULL,
+    body  TEXT NOT NULL,
+    transmission  TEXT NOT NULL,
+    engine_id BIGINT NOT NULL UNIQUE REFERENCES engine(id),
+    owner_id BIGINT NOT NULL UNIQUE REFERENCES owner(id)
 );

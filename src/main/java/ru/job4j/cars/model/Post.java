@@ -19,9 +19,10 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Include
-    private int id;
+    private Long id;
     private String description;
     private LocalDateTime created = LocalDateTime.now();
+    private boolean isSold;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "auto_user_id")

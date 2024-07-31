@@ -1,6 +1,6 @@
-create table auto_user
+CREATE TABLE auto_user
 (
-    id        serial primary key,
-    login     text unique not null,
-    password  text        not null
+    id        BIGSERIAL PRIMARY KEY,
+    login     TEXT UNIQUE NOT NULL,
+    password  TEXT NOT NULL
 );

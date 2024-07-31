@@ -19,7 +19,7 @@ public class Owner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private int id;
+    private Long id;
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL)
