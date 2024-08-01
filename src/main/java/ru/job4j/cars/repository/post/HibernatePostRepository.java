@@ -26,7 +26,7 @@ public class HibernatePostRepository implements PostRepository {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(Long id) {
         return crudRepository.run(
                 "delete from Post where id = :fId",
                 Map.of("fId", id)
@@ -39,7 +39,7 @@ public class HibernatePostRepository implements PostRepository {
     }
 
     @Override
-    public Optional<Post> findById(int id) {
+    public Optional<Post> findById(Long id) {
         return crudRepository.optional(
                 "from Post where id = :fId", Post.class,
                 Map.of("fId", id)

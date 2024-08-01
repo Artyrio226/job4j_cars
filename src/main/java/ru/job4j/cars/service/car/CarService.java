@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface CarService {
     Optional<Car> create(Car car);
     boolean update(Car car);
-    boolean delete(int id);
+    boolean delete(Long id);
     List<Car> findAllOrderById();
-    Optional<Car> findById(int id);
+    Optional<Car> findById(Long id);
     List<Car> findByLikeName(String name);
     Optional<Car> findByName(String name);
 }

@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface EngineRepository {
     Optional<Engine> create(Engine engine);
     boolean update(Engine engine);
-    boolean delete(int id);
+    boolean delete(Long id);
     List<Engine> findAllOrderById();
-    Optional<Engine> findById(int id);
+    Optional<Engine> findById(Long id);
     List<Engine> findByLikeName(String name);
     Optional<Engine> findByName(String name);
 }

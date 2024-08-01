@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface PostRepository {
     Optional<Post> create(Post post);
     boolean update(Post post);
-    boolean delete(int id);
+    boolean delete(Long id);
     List<Post> findAllOrderById();
-    Optional<Post> findById(int id);
+    Optional<Post> findById(Long id);
     List<Post> findByLikeDescription(String key);
     List<Post> findPostsForLastDays(int day);
     List<Post> findPostsWithPhoto();

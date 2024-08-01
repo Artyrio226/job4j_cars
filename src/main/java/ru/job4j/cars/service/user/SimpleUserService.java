@@ -24,7 +24,7 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(Long id) {
         return userRepository.delete(id);
     }
 
@@ -34,7 +34,7 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public Optional<User> findById(int id) {
+    public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
 

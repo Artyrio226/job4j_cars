@@ -25,7 +25,7 @@ public class HibernateOwnerRepository implements OwnerRepository {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(Long id) {
         return crudRepository.run(
                 "delete from Owner where id = :fId",
                 Map.of("fId", id)
@@ -38,7 +38,7 @@ public class HibernateOwnerRepository implements OwnerRepository {
     }
 
     @Override
-    public Optional<Owner> findById(int id) {
+    public Optional<Owner> findById(Long id) {
         return crudRepository.optional(
                 "from Owner where id = :fId", Owner.class,
                 Map.of("fId", id)

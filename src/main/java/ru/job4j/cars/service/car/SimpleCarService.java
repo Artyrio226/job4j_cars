@@ -24,7 +24,7 @@ public class SimpleCarService implements CarService {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(Long id) {
         return carRepository.delete(id);
     }
 
@@ -34,7 +34,7 @@ public class SimpleCarService implements CarService {
     }
 
     @Override
-    public Optional<Car> findById(int id) {
+    public Optional<Car> findById(Long id) {
         return carRepository.findById(id);
     }
 

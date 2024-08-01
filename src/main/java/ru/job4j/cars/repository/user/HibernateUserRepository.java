@@ -35,7 +35,7 @@ public class HibernateUserRepository implements UserRepository {
      * Удалить пользователя по id.
      * @param userId ID
      */
-    public boolean delete(int userId) {
+    public boolean delete(Long userId) {
         return crudRepository.run(
                 "delete from User where id = :fId",
                 Map.of("fId", userId)
@@ -54,7 +54,7 @@ public class HibernateUserRepository implements UserRepository {
      * Найти пользователя по ID
      * @return пользователь.
      */
-    public Optional<User> findById(int userId) {
+    public Optional<User> findById(Long userId) {
         return crudRepository.optional(
                 "from User where id = :fId", User.class,
                 Map.of("fId", userId)

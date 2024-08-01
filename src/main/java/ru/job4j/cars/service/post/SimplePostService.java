@@ -94,8 +94,7 @@ public class SimplePostService implements PostService {
         car.setOwner(owner);
         car.setName(postDto.getName());
         car.setBody(postDto.getBody());
-        car.setDrive(postDto.getDrive());
-        car.setTransmission(postDto.getTransmission());
+        car.setTransmission(Transmission.valueOf(postDto.getTransmission()));
         car.setMileage(postDto.getMileage());
         car.setYear(postDto.getYear());
 

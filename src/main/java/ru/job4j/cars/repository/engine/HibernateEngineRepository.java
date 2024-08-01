@@ -24,7 +24,7 @@ public class HibernateEngineRepository implements EngineRepository {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(Long id) {
         return crudRepository.run(
                 "delete from Engine where id = :fId",
                 Map.of("fId", id)
@@ -37,7 +37,7 @@ public class HibernateEngineRepository implements EngineRepository {
     }
 
     @Override
-    public Optional<Engine> findById(int id) {
+    public Optional<Engine> findById(Long id) {
         return crudRepository.optional(
                 "from Engine where id = :fId", Engine.class,
                 Map.of("fId", id)

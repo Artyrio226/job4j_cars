@@ -25,7 +25,7 @@ public class HibernateCarRepository implements CarRepository {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(Long id) {
         return crudRepository.run(
                 "delete from Car where id = :fId",
                 Map.of("fId", id)
@@ -38,7 +38,7 @@ public class HibernateCarRepository implements CarRepository {
     }
 
     @Override
-    public Optional<Car> findById(int id) {
+    public Optional<Car> findById(Long id) {
         return crudRepository.optional(
                 "from Car where id = :fId", Car.class,
                 Map.of("fId", id)
