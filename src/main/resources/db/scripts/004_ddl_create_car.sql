@@ -7,6 +7,5 @@ CREATE TABLE car
     color  TEXT NOT NULL,
     body  TEXT NOT NULL,
     transmission  TEXT NOT NULL,
-    engine_id BIGINT NOT NULL UNIQUE REFERENCES engine(id),
-    owner_id BIGINT NOT NULL UNIQUE REFERENCES owner(id)
+    engine_id BIGINT NOT NULL UNIQUE REFERENCES engine(id)
 );
