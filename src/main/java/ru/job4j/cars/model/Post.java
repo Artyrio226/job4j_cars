@@ -8,10 +8,17 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Модель данных объявление
+ * @author Artur Stepanian
+ * @version 1.0
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = "photos")
+@Builder
 @Entity
 @Table(name = "auto_post")
 public class Post {
@@ -20,32 +27,38 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Include
     private Long id;
+
+    @Include
     private String description;
+
+    /**
+     * Цена автомобиля
+     */
+    private int price;
+
+    /**
+     * Город объявления
+     */
+    private String city;
+
+    @Include
     private LocalDateTime created = LocalDateTime.now();
+
     private boolean isSold;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "auto_user_id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "auto_user_id", nullable = false)
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_id")
     private Car car;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @OrderBy("id desc")
-    @JoinColumn(name = "auto_post_id")
-    private List<PriceHistory> priceHistories = new ArrayList<>();
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "participates",
-            joinColumns = { @JoinColumn(name = "post_id") },
-            inverseJoinColumns = { @JoinColumn(name = "user_id") }
-    )
-    private List<User> participates = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "auto_post_id")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Photo> photos = new ArrayList<>();
+
+    public void addPhoto(Photo photo) {
+        photos.add(photo);
+        photo.setPost(this);
+    }
 }

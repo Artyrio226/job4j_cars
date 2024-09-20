@@ -1,5 +1,0 @@
-CREATE TABLE owner(
-    id BIGSERIAL PRIMARY KEY,
-    name  TEXT NOT NULL ,
-    user_id BIGINT NOT NULL UNIQUE REFERENCES auto_user(id) ON DELETE CASCADE
-);

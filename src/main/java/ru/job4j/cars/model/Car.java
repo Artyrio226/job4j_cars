@@ -3,12 +3,9 @@ package ru.job4j.cars.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Модель данных автомобиль
- *
  * @author Artur Stepanian
  * @version 1.0
  */
@@ -39,17 +36,4 @@ public class Car {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "engine_id")
     private Engine engine;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
-    private Owner owner;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
-    private List<History> histories = new ArrayList<>();
-
-    public void addHistory(History history) {
-        histories.add(history);
-        history.setCar(this);
-    }
 }
