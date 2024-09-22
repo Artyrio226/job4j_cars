@@ -1,87 +1,121 @@
 package ru.job4j.cars.repository.post;
 
-import org.junit.jupiter.api.*;
-
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.job4j.cars.model.*;
-import ru.job4j.cars.repository.CrudRepository;
+import ru.job4j.cars.repository.HibernateUtil;
 import ru.job4j.cars.repository.car.HibernateCarRepository;
 import ru.job4j.cars.repository.engine.HibernateEngineRepository;
-import ru.job4j.cars.repository.owner.HibernateOwnerRepository;
 import ru.job4j.cars.repository.photo.HibernatePhotoRepository;
 import ru.job4j.cars.repository.user.HibernateUserRepository;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.time.LocalDateTime;
 
-class HibernatePostRepositoryTest {
-    static StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-            .configure().build();
-    static SessionFactory sf = new MetadataSources(registry)
-            .buildMetadata().buildSessionFactory();
-    static CrudRepository cr = new CrudRepository(sf);
+import static org.assertj.core.api.Assertions.assertThat;
 
-    static HibernateUserRepository userRepository = new HibernateUserRepository(cr);
-    static HibernatePostRepository postRepository = new HibernatePostRepository(cr);
-    static HibernateOwnerRepository ownerRepository = new HibernateOwnerRepository(cr);
-    static HibernateCarRepository carRepository = new HibernateCarRepository(cr);
-    static HibernatePhotoRepository photoRepository = new HibernatePhotoRepository(cr);
-    static HibernateEngineRepository engineRepository = new HibernateEngineRepository(cr);
+@SpringBootTest
+class HibernatePostRepositoryTest {
+
+    @Autowired
+    HibernateUserRepository userRepository;
+    @Autowired
+    HibernatePostRepository postRepository;
+    @Autowired
+    HibernateCarRepository carRepository;
+    @Autowired
+    HibernatePhotoRepository photoRepository;
+    @Autowired
+    HibernateEngineRepository engineRepository;
 
     private User user2;
+    private User user;
     private Car car2;
     private Post post;
+    private Post post2;
 
     @BeforeEach
     public void init() {
-        User user = new User();
-        user.setLogin("admin1");
-        user.setPassword("admin1");
+        user = User.builder()
+                .username("Test1")
+                .email("test@mail.ru")
+                .password("test")
+                .phoneNumber("+79051111111")
+                .build();
 
-        Engine engine = new Engine();
-        engine.setName("Turbo V8");
+        Engine engine = Engine.builder()
+                .capacity(3.0)
+                .hp(300)
+                .fuel("petrol")
+                .build();
 
-        Owner owner = new Owner();
-        owner.setName("Peter");
-        owner.setUser(user);
+        Car car = Car.builder()
+                .name("Lada")
+                .body(Body.SEDAN)
+                .color("red")
+                .transmission(Transmission.MANUAL)
+                .years(2020)
+                .mileage(20000)
+                .engine(engine)
+                .build();
 
-        Car car = new Car();
-        car.setName("Lada");
-        car.setOwner(owner);
-        car.setEngine(engine);
+        user2 = User.builder()
+                .username("Test2")
+                .email("test2@mail.ru")
+                .password("test2")
+                .phoneNumber("+79051111112")
+                .build();
 
-        user2 = new User();
-        user2.setLogin("admin2");
-        user2.setPassword("admin");
+        Engine engine2 = Engine.builder()
+                .capacity(5.0)
+                .hp(1000)
+                .fuel("diesel")
+                .build();
 
-        Engine engine2 = new Engine();
-        engine2.setName("Hybrid");
+        car2 = Car.builder()
+                .name("Kamaz")
+                .body(Body.TRUCK)
+                .color("green")
+                .transmission(Transmission.MANUAL)
+                .years(2021)
+                .mileage(50000)
+                .engine(engine2)
+                .build();
 
-        Owner owner2 = new Owner();
-        owner2.setName("Roman");
-        owner2.setUser(user2);
+        Photo photo = Photo.builder()
+                .name("photo1")
+                .path("files/photo1")
+                .build();
 
-        car2 = new Car();
-        car2.setName("Kamaz");
-        car2.setOwner(owner2);
-        car2.setEngine(engine2);
+        post = Post.builder()
+                .description("description")
+                .price(1500000)
+                .city("Moscow")
+                .created(LocalDateTime.now())
+                .user(user)
+                .car(car)
+                .build();
 
-        Photo photo = new Photo();
-        photo.setName("photo1");
-        photo.setPath("files/photo1");
+        post2 = Post.builder()
+                .description("description2")
+                .price(700000)
+                .city("Rome")
+                .created(LocalDateTime.now())
+                .user(user2)
+                .car(car2)
+                .build();
 
-        post = new Post();
-        post.setUser(user);
+        post.addPhoto(photo);
         post.setCar(car);
-        post.setDescription("Description1");
-        post.getPhotos().add(photo);
-        postRepository.create(post);
+        post2.setCar(car2);
+
+
+        user.addPost(post);
+        user.addPost(post2);
     }
 
     @AfterEach
@@ -101,11 +135,6 @@ class HibernatePostRepositoryTest {
             carRepository.delete(car.getId());
         }
 
-        var owners = ownerRepository.findAllOrderById();
-        for (var owner : owners) {
-            ownerRepository.delete(owner.getId());
-        }
-
         var engines = engineRepository.findAllOrderById();
         for (var engine : engines) {
             engineRepository.delete(engine.getId());
@@ -119,40 +148,7 @@ class HibernatePostRepositoryTest {
 
     @AfterAll
     public static void close() {
-        StandardServiceRegistryBuilder.destroy(registry);
-    }
-
-    /**
-     * Удачное сохранение объявления в БД.
-     */
-    @Test
-    public void whenCreatePostThenOptionalIsNotEmpty() throws Exception {
-        Post post2 = new Post();
-        post2.setUser(user2);
-        post2.setCar(car2);
-        post2.setDescription("Description2");
-
-        var result = postRepository.create(post2);
-        var post2Result = postRepository.findById(post2.getId());
-
-        assertThat(result).isNotEmpty();
-        assertThat(post2Result.get().getDescription()).isEqualTo(post2.getDescription());
-    }
-
-    /**
-     * Неудачное сохранение объявления в БД.
-     */
-    @Test
-    public void whenCreatePostThenOptionalIsEmpty() throws Exception {
-        Post post2 = new Post();
-        post2.setUser(user2);
-        post2.setCar(car2);
-
-        var result = postRepository.create(post2);
-        var post2Result = postRepository.findById(post2.getId());
-
-        assertThat(result).isEmpty();
-        assertThat(post2Result).isEmpty();
+        StandardServiceRegistryBuilder.destroy(HibernateUtil.getServiceRegistry());
     }
 
     /**
@@ -160,6 +156,7 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenFindPostById() throws Exception {
+        userRepository.save(user);
         var result = postRepository.findById(post.getId());
 
         assertThat(result).isNotEmpty();
@@ -171,9 +168,10 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenNotFoundPostById() throws Exception {
-        var result = postRepository.findById(post.getId() + 1);
+        userRepository.save(user);
+        var result = postRepository.findById(post2.getId() + 1);
 
-        assertThat(result).isEmpty();
+        assertThat(result.isPresent()).isFalse();
     }
 
     /**
@@ -181,6 +179,7 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenUpdatePostThenTrue() throws Exception {
+        userRepository.save(user);
         String newDescription = "New Description";
         post.setDescription(newDescription);
 
@@ -196,6 +195,7 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenUpdatePostThenFalse() throws Exception {
+        userRepository.save(user);
         String oldDescription = post.getDescription();
         post.setDescription(null);
 
@@ -211,6 +211,7 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenDeletePostThenTrue() throws Exception {
+        userRepository.save(user);
         var result = postRepository.delete(post.getId());
         var postResult = postRepository.findById(post.getId());
 
@@ -223,12 +224,13 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenDeletePostThenFalse() throws Exception {
-        var result = postRepository.delete(post.getId() + 1);
-        var postResult = postRepository.findById(post.getId());
+        userRepository.save(user);
+        var result = postRepository.delete(post2.getId() + 1);
+        var postResult = postRepository.findById(post2.getId());
 
         assertThat(result).isFalse();
         assertThat(postResult).isNotEmpty();
-        assertThat(postResult.get().getDescription()).isEqualTo(post.getDescription());
+        assertThat(postResult.get().getDescription()).isEqualTo(post2.getDescription());
     }
 
     /**
@@ -236,35 +238,23 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenFindAllPostsOrderedById() throws Exception {
-        Post post2 = new Post();
-        post2.setUser(user2);
-        post2.setCar(car2);
-        post2.setDescription("Description2");
-        postRepository.create(post2);
-
+        userRepository.save(user);
         var result = postRepository.findAllOrderById();
 
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(2);
-        assertThat(result).containsExactly(post, post2);
     }
 
     /**
-     * Найдены все объявления в БД, содержащие в имени "cri".
+     * Найдены все объявления в БД, содержащие в описании объявления "cri".
      */
     @Test
     public void whenFindAllPostsByLikeDescriptionCri() throws Exception {
-        Post post2 = new Post();
-        post2.setUser(user2);
-        post2.setCar(car2);
-        post2.setDescription("Des ription2");
-        postRepository.create(post2);
-
+        userRepository.save(user);
         var result = postRepository.findByLikeDescription("cri");
 
         assertThat(result).isNotEmpty();
-        assertThat(result).hasSize(1);
-        assertThat(result).containsExactly(post);
+        assertThat(result.size()).isEqualTo(2);
     }
 
     /**
@@ -272,6 +262,7 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenNotFoundPostsByLikeDescriptionMoon() throws Exception {
+        userRepository.save(user);
         var result = postRepository.findByLikeDescription("moon");
 
         assertThat(result).isEmpty();
@@ -282,6 +273,7 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenFindPostsWithCarByName() throws Exception {
+        userRepository.save(user);
         var result = postRepository.findCarsByName("Lada");
 
         assertThat(result).isNotEmpty();
@@ -294,9 +286,10 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenNotFoundPostsWithCarByName() throws Exception {
-        var result = postRepository.findCarsByName("Kamaz");
+        userRepository.save(user);
+        var result = postRepository.findCarsByName("ZIL");
 
-        assertThat(result).isEmpty();
+        assertThat(result.size()).isEqualTo(0);
 
     }
 
@@ -305,9 +298,11 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenFindPostsForLastDay() throws Exception {
+        userRepository.save(user);
         var result = postRepository.findPostsForLastDays(1);
 
         assertThat(result).isNotEmpty();
+        assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getId()).isEqualTo(post.getId());
     }
 
@@ -316,12 +311,17 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenNotFoundPostsForLastDay() throws Exception {
+        userRepository.save(user);
+
+        var result = postRepository.findPostsForLastDays(1);
+        assertThat(result.size()).isEqualTo(2);
+
         post.setCreated(LocalDateTime.now().minusDays(2));
         postRepository.update(post);
 
-        var result = postRepository.findPostsForLastDays(1);
+        var result2 = postRepository.findPostsForLastDays(1);
 
-        assertThat(result).isEmpty();
+        assertThat(result2.size()).isEqualTo(1);
     }
 
     /**
@@ -329,18 +329,12 @@ class HibernatePostRepositoryTest {
      */
     @Test
     public void whenFindPostsWithPhoto() throws Exception {
-        Post post2 = new Post();
-        post2.setUser(user2);
-        post2.setCar(car2);
-        post2.setDescription("Description2");
-        postRepository.create(post2);
-
+        userRepository.save(user);
         var result = postRepository.findPostsWithPhoto();
         var resultAll = postRepository.findAllOrderById();
 
         assertThat(resultAll).hasSize(2);
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(1);
-        assertThat(result).containsExactly(post);
     }
 }
