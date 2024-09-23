@@ -1,9 +1,8 @@
 package ru.job4j.cars.model;
 
-import javax.persistence.*;
 import lombok.*;
-import lombok.EqualsAndHashCode.Include;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +12,11 @@ import java.util.List;
  * @author Artur Stepanian
  * @version 1.0
  */
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(exclude = "photos")
 @ToString(exclude = "photos")
 @Builder
 @Entity
@@ -25,10 +25,11 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Include
     private Long id;
 
-    @Include
+    /**
+     * Описание в объявлении
+     */
     private String description;
 
     /**
@@ -41,9 +42,15 @@ public class Post {
      */
     private String city;
 
-    @Include
+    /**
+     * Время создания объявления
+     */
     private LocalDateTime created = LocalDateTime.now();
 
+    /**
+     * Продано или нет
+     */
+    @Column(name = "is_sold")
     private boolean isSold;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -54,6 +61,7 @@ public class Post {
     @JoinColumn(name = "car_id")
     private Car car;
 
+    @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Photo> photos = new ArrayList<>();
 
