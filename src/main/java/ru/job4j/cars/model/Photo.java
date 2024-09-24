@@ -1,23 +1,31 @@
 package ru.job4j.cars.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+/**
+ * Модель данных фото
+ * @author Artur Stepanian
+ * @version 1.0
+ */
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(exclude = "post")
+@ToString(exclude = "post")
+@Builder
 @Entity
 @Table(name = "photo")
 public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private int id;
     private String name;
     private String path;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "auto_post_id", nullable = false)
+    private Post post;
 }
