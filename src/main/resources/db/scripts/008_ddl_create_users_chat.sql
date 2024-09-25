@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS users_chat
+(
+    id BIGSERIAL PRIMARY KEY,
+    users_id BIGINT NOT NULL UNIQUE REFERENCES users(id),
+    chat_id BIGINT NOT NULL UNIQUE REFERENCES chat(id)
+);
