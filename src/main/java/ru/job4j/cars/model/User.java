@@ -14,15 +14,16 @@ import java.util.List;
  * @author Artur Stepanian
  * @version 1.0
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "posts")
-@ToString(exclude = "posts")
+@EqualsAndHashCode(exclude = {"posts", "userChats"})
+@ToString(exclude = {"posts", "userChats"})
 @Builder
 @Entity
-@Table(name = "auto_user")
-public class User {
+@Table(name = "users")
+public class User implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,7 +38,7 @@ public class User {
     /**
      *  Адрес электронной почты пользователя
      */
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     @NotBlank(message = "Поле не должно быть пустым")
     private String email;
 
@@ -54,9 +55,17 @@ public class User {
     @NotBlank(message = "Поле не должно быть пустым")
     @Pattern(regexp = "\\+\\d{11}",
             message = "Должно быть в формате \"+\" и 11 значный номер")
+    @Column(name = "phone_number")
     private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserChat> userChats = new ArrayList<>();
 }

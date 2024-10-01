@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "engine")
-public class Engine {
+public class Engine implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

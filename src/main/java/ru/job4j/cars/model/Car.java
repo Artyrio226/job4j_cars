@@ -13,17 +13,17 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"engine", "owner", "histories"})
-@ToString(exclude = {"engine", "owner", "histories"})
+@EqualsAndHashCode(exclude = "engine")
+@ToString(exclude = "engine")
 @Builder
 @Entity
 @Table(name = "car")
-public class Car {
+public class Car implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private int year;
+    private int years;
     private int mileage;
     private String color;
 

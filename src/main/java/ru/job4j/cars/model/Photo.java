@@ -18,14 +18,25 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "photo")
-public class Photo {
+public class Photo implements BaseEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String name;
     private String path;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "auto_post_id", nullable = false)
     private Post post;
+
+    /**
+     * Устанавливает объявление в поле Post в Photo
+     * и фото в список фото объявления Post.
+     *
+     * @param post пользователь
+     */
+    public void addPost(Post post) {
+        this.post = post;
+        this.post.getPhotos().add(this);
+    }
 }

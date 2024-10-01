@@ -21,11 +21,16 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "auto_post")
-public class Post {
+public class Post implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * Имя в объявления
+     */
+    private String name;
 
     /**
      * Описание в объявлении
@@ -53,11 +58,17 @@ public class Post {
     @Column(name = "is_sold")
     private boolean isSold;
 
+    /**
+     * Новое авто или нет
+     */
+    @Column(name = "is_new_car")
+    private boolean isNewCar;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "auto_user_id", nullable = false)
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "car_id")
     private Car car;
 
@@ -65,8 +76,14 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Photo> photos = new ArrayList<>();
 
-    public void addPhoto(Photo photo) {
-        photos.add(photo);
-        photo.setPost(this);
+    /**
+     * Устанавливает пользователя в поле User в Post
+     * и объявление в список объявлений пользователя User.
+     *
+     * @param user пользователь
+     */
+    public void addUser(User user) {
+        this.user = user;
+        this.user.getPosts().add(this);
     }
 }
