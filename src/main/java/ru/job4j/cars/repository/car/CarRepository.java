@@ -1,16 +1,7 @@
 package ru.job4j.cars.repository.car;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.job4j.cars.model.Car;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface CarRepository {
-    Optional<Car> create(Car car);
-    boolean update(Car car);
-    boolean delete(Long id);
-    List<Car> findAllOrderById();
-    Optional<Car> findById(Long id);
-    List<Car> findByLikeName(String name);
-    Optional<Car> findByName(String name);
+public interface CarRepository extends JpaRepository<Car, Long> {
 }
